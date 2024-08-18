@@ -2,18 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:pocket_app/model/pocket.dart';
 import 'package:pocket_app/utils/routes.dart';
 
-class PocketListScreen extends StatefulWidget {
+class PocketListScreen extends StatelessWidget {
   const PocketListScreen({super.key});
-
-  @override
-  State<PocketListScreen> createState() => _PocketListScreenState();
-}
-
-class _PocketListScreenState extends State<PocketListScreen> {
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,13 +65,13 @@ class _PocketListScreenState extends State<PocketListScreen> {
         itemCount: pocketData.length,
         itemBuilder: (context, index) {
           final pocket = pocketData[index];
-          return _buildPocketListItem(pocket);
+          return _buildPocketListItem(context, pocket);
         },
       ),
     );
   }
 
-  Widget _buildPocketListItem(Pocket pocket) {
+  Widget _buildPocketListItem(BuildContext context, Pocket pocket) {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).pushNamed(Routes.detailPocket);

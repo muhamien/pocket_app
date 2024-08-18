@@ -2,18 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:pocket_app/model/transaction.dart';
 import 'package:pocket_app/utils/routes.dart';
 
-class TransactionListScreen extends StatefulWidget {
+class TransactionListScreen extends StatelessWidget {
   const TransactionListScreen({super.key});
-
-  @override
-  State<TransactionListScreen> createState() => _TransactionListScreenState();
-}
-
-class _TransactionListScreenState extends State<TransactionListScreen> {
-  @override
-  void initState() {
-    super.initState();
-  }
 
   String _formatCurrency(int amount) {
     return 'Rp.${amount.toString().replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}';

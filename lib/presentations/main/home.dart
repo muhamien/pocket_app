@@ -3,14 +3,9 @@ import 'package:pocket_app/model/pocket.dart';
 import 'package:pocket_app/model/transaction.dart';
 import 'package:pocket_app/utils/routes.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
   int _calculateTotalBalance() {
     int totalBalance = 0;
     for (var pocket in pocketList) {
@@ -37,11 +32,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(height: 12),
                 _buildTotalBalance(),
                 const SizedBox(height: 24),
-                _buildConnectedPocketListView(),
+                _buildConnectedPocketListView(context),
                 const SizedBox(height: 12),
-                _buildTransactionCard(),
+                _buildTransactionCard(context),
                 const SizedBox(height: 12),
-                _buildFinancialTipsCard(),
+                _buildFinancialTipsCard(context),
               ],
             ),
           ),
@@ -135,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildConnectedPocketListView() {
+  Widget _buildConnectedPocketListView(BuildContext context) {
     return Column(mainAxisAlignment: MainAxisAlignment.start, children: [
       const SizedBox(
         width: double.infinity,
@@ -234,7 +229,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ]);
   }
 
-  Widget _buildTransactionCard() {
+  Widget _buildTransactionCard(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Card(
@@ -272,7 +267,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: transactionList.take(3).map((transaction) {
                   return Column(
                     children: [
-                      _buildTransactionItem(transaction),
+                      _buildTransactionItem(context, transaction),
                       const SizedBox(height: 14),
                     ],
                   );
@@ -285,7 +280,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildTransactionItem(Transaction transaction) {
+  Widget _buildTransactionItem(BuildContext context, Transaction transaction) {
     return GestureDetector(
       onTap: () {
         Navigator.of(context)
@@ -347,7 +342,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildFinancialTipsCard() {
+  Widget _buildFinancialTipsCard(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Card(

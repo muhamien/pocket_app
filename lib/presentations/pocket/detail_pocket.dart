@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pocket_app/model/pocket.dart';
 
-class DetailPocketScreen extends StatelessWidget {
+class DetailPocketScreen extends StatefulWidget {
   final Pocket pocket;
 
   const DetailPocketScreen({
@@ -9,6 +9,11 @@ class DetailPocketScreen extends StatelessWidget {
     required this.pocket,
   });
 
+  @override
+  DetailPocketScreenState createState() => DetailPocketScreenState();
+}
+
+class DetailPocketScreenState extends State<DetailPocketScreen> {
   String _formatCurrency(int amount) {
     return 'Rp.${amount.toString().replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}';
   }
@@ -47,7 +52,7 @@ class DetailPocketScreen extends StatelessWidget {
         Row(
           children: [
             Image.asset(
-              pocket.logo,
+              widget.pocket.logo,
               width: 50,
               height: 50,
             ),
@@ -56,7 +61,7 @@ class DetailPocketScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  pocket.name,
+                  widget.pocket.name,
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
@@ -64,7 +69,7 @@ class DetailPocketScreen extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  _formatCurrency(pocket.balance),
+                  _formatCurrency(widget.pocket.balance),
                   style: const TextStyle(
                     fontSize: 16,
                     fontFamily: 'RobotoMono',
