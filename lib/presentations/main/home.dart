@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pocket_app/model/pocket.dart';
 import 'package:pocket_app/model/transaction.dart';
 import 'package:pocket_app/utils/routes.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  late List<Pocket> pocketData;
+  late List<Transaction> transactionData;
+
+  Map addPocketData = {"pocketId": "", "balance": 0};
 
   int _calculateTotalBalance() {
     int totalBalance = 0;
@@ -16,6 +27,113 @@ class HomeScreen extends StatelessWidget {
 
   String _formatCurrency(int amount) {
     return 'Rp.${amount.toString().replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}';
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    pocketData = pocketList;
+    transactionData = transactionList;
+  }
+
+  void _showAddBalanceModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+      ),
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                "Add Balance",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24,
+                  fontFamily: 'RobotoMono',
+                ),
+              ),
+              const SizedBox(height: 16),
+              DropdownButtonFormField<Pocket>(
+                decoration: InputDecoration(
+                  labelText: 'Select Pocket',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+                items: pocketData.map((Pocket pocket) {
+                  return DropdownMenuItem<Pocket>(
+                    value: pocket,
+                    child: Text(pocket.name),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    addPocketData['pocketId'] = value?.pocketId;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                decoration: InputDecoration(
+                  labelText: 'Amount',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
+                onChanged: (value) {
+                  setState(() {
+                    addPocketData['amount'] = value.replaceAll(',', '.');
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  minimumSize: const Size.fromHeight(50), // Full width
+                ),
+                onPressed: () {
+                  _updateTopupData();
+                  setState(() {});
+                },
+                child: const Text(
+                  "Top up",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _updateTopupData() {
+    final Pocket pocketSelected = pocketData.firstWhere(
+      (pocket) => pocket.pocketId == addPocketData['pocketId'],
+    );
+
+    if (pocketSelected != null) {
+      setState(() {
+        final updatedPocket = Pocket(
+          pocketId: pocketSelected.pocketId,
+          name: pocketSelected.name,
+          logo: pocketSelected.logo,
+          balance: pocketSelected.balance + int.parse(addPocketData['amount']),
+        );
+        pocketData[pocketData.indexOf(pocketSelected)] = updatedPocket;
+      });
+    }
+    Navigator.of(context).pop();
   }
 
   @override
@@ -110,6 +228,9 @@ class HomeScreen extends StatelessWidget {
                 width: 8,
               ),
               InkWell(
+                onTap: () {
+                  _showAddBalanceModal(context);
+                },
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(100.0),
@@ -158,7 +279,7 @@ class HomeScreen extends StatelessWidget {
                   Navigator.of(context).pushNamed(Routes.detailPocket);
                 },
                 child: Row(
-                  children: pocketList.map<Widget>((pocket) {
+                  children: pocketData.map<Widget>((pocket) {
                     return GestureDetector(
                       onTap: () {
                         Navigator.of(context)
@@ -264,7 +385,7 @@ class HomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               Column(
-                children: transactionList.take(3).map((transaction) {
+                children: transactionData.take(3).map((transaction) {
                   return Column(
                     children: [
                       _buildTransactionItem(context, transaction),

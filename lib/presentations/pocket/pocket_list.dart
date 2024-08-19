@@ -31,9 +31,7 @@ class PocketListScreen extends StatelessWidget {
                   ),
                   minimumSize: const Size.fromHeight(50), // Full width
                 ),
-                onPressed: () {
-                  // Logic to add a new pocket
-                },
+                onPressed: () {},
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -74,7 +72,7 @@ class PocketListScreen extends StatelessWidget {
   Widget _buildPocketListItem(BuildContext context, Pocket pocket) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushNamed(Routes.detailPocket);
+        Navigator.of(context).pushNamed(Routes.detailPocket, arguments: pocket);
       },
       child: Card(
         child: Container(
@@ -99,9 +97,7 @@ class PocketListScreen extends StatelessWidget {
                 ],
               ),
               GestureDetector(
-                onTap: () {
-                  // Add your onTap functionality here
-                },
+                onTap: () {},
                 child: Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pocket_app/model/transaction.dart';
 
-class DetailTransactionScreen extends StatefulWidget {
+class DetailTransactionScreen extends StatelessWidget {
   final Transaction transaction;
 
   const DetailTransactionScreen({
@@ -9,11 +9,6 @@ class DetailTransactionScreen extends StatefulWidget {
     required this.transaction,
   });
 
-  @override
-  DetailTransactionScreenState createState() => DetailTransactionScreenState();
-}
-
-class DetailTransactionScreenState extends State<DetailTransactionScreen> {
   String _formatCurrency(int amount) {
     return 'Rp.${amount.toString().replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}';
   }
@@ -61,7 +56,7 @@ class DetailTransactionScreenState extends State<DetailTransactionScreen> {
               height: 50,
               child: Center(
                 child: Text(
-                  widget.transaction.merchant[0],
+                  transaction.merchant[0],
                   style: const TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
@@ -75,7 +70,7 @@ class DetailTransactionScreenState extends State<DetailTransactionScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.transaction.title,
+                  transaction.title,
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
@@ -83,7 +78,7 @@ class DetailTransactionScreenState extends State<DetailTransactionScreen> {
                   ),
                 ),
                 Text(
-                  '-${_formatCurrency(widget.transaction.amount)}',
+                  '-${_formatCurrency(transaction.amount)}',
                   style: const TextStyle(
                     fontSize: 16,
                     fontFamily: 'RobotoMono',
